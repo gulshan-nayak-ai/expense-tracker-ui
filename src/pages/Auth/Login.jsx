@@ -3,6 +3,8 @@ import AuthLayout from "../../components/layouts/AuthLayout";
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosinstance';
+import { API_PATHS } from '../../utils/apiPath';
 
 
 const Login = () => {
@@ -30,6 +32,23 @@ const Login = () => {
     setError("")
 
     //Login API Call
+    try{
+      const username = email;
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        username,
+        password
+      });
+
+      const  {token, user} = response.data;
+
+      if(token) {
+        localStorage.setItem("token", token)
+        navigate("/dashboard")
+      }
+    } catch (error){
+      setError("Something is Wrong")
+
+    }
 
   }
 
